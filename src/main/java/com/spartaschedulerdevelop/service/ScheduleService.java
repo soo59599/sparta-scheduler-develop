@@ -1,10 +1,10 @@
 package com.spartaschedulerdevelop.service;
 
-import com.spartaschedulerdevelop.common.exception.MyCustomException;
-import com.spartaschedulerdevelop.common.exception.enums.ErrorCode;
 import com.spartaschedulerdevelop.dto.schedule.*;
 import com.spartaschedulerdevelop.entity.Schedule;
+import com.spartaschedulerdevelop.entity.User;
 import com.spartaschedulerdevelop.repository.ScheduleRepository;
+import com.spartaschedulerdevelop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +16,18 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ScheduleSaveResponseDto save(ScheduleSaveRequestDto request) {
 
-        Schedule savedSchedule =
-                scheduleRepository
-                .save(Schedule.create(request));
+        User user = userRepository.findByNameOrElseThrow(request.getName());
+
+        Schedule schedule = Schedule.create(request);
+
+        schedule.setUser(user);
+
+        Schedule savedSchedule = scheduleRepository.save(schedule);
 
         return ScheduleSaveResponseDto.from(savedSchedule);
     }
@@ -30,29 +35,25 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleGetOneResponseDto findById(Long id) {
 
-        Schedule schedule =
-                scheduleRepository
-                .findById(id)
-                .orElseThrow(()->new MyCustomException(ErrorCode.SCHEDULE_NOT_FOUND));
+        Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
 
         return ScheduleGetOneResponseDto.from(schedule);
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleGetAllResponseDto> findAll() {
+    public List<ScheduleGetOneResponseDto> findAll() {
 
         return scheduleRepository
                         .findAllByOrderByCreatedAtDesc()
                         .stream()
-                        .map(ScheduleGetAllResponseDto::from)
+                        .map(ScheduleGetOneResponseDto::from)
                         .toList();
     }
 
     @Transactional
     public ScheduleUpdateResponseDto update(Long id, ScheduleUpdateRequestDto request) {
 
-        Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new MyCustomException(ErrorCode.SCHEDULE_NOT_FOUND));
+        Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
 
         schedule.updateTitleAndContent(request);
 
@@ -61,8 +62,7 @@ public class ScheduleService {
 
     @Transactional
     public void delete(Long id) {
-        Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(() -> new MyCustomException(ErrorCode.SCHEDULE_NOT_FOUND));
+        Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
 
         scheduleRepository.delete(schedule);
 
