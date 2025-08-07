@@ -41,12 +41,12 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleGetAllResponseDto> findAll() {
+    public List<ScheduleGetOneResponseDto> findAll() {
 
         return scheduleRepository
                         .findAllByOrderByCreatedAtDesc()
                         .stream()
-                        .map(ScheduleGetAllResponseDto::from)
+                        .map(ScheduleGetOneResponseDto::from)
                         .toList();
     }
 

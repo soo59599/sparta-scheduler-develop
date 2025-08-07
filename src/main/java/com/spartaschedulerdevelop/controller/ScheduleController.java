@@ -31,8 +31,8 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleGetAllResponseDto>> findAll(){
-        List<ScheduleGetAllResponseDto> responses = scheduleService.findAll();
+    public ResponseEntity<List<ScheduleGetOneResponseDto>> findAll(){
+        List<ScheduleGetOneResponseDto> responses = scheduleService.findAll();
         return ResponseEntity.ok(responses);
     }
 
