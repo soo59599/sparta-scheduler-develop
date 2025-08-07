@@ -1,8 +1,8 @@
 package com.spartaschedulerdevelop.service;
 
-import com.spartaschedulerdevelop.dto.user.UserGetOneResponseDto;
-import com.spartaschedulerdevelop.dto.user.UserSaveRequestDto;
-import com.spartaschedulerdevelop.dto.user.UserSaveResponseDto;
+import com.spartaschedulerdevelop.common.exception.MyCustomException;
+import com.spartaschedulerdevelop.common.exception.enums.ErrorCode;
+import com.spartaschedulerdevelop.dto.user.*;
 import com.spartaschedulerdevelop.entity.User;
 import com.spartaschedulerdevelop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +37,18 @@ public class UserService {
     public List<UserGetOneResponseDto> findAll(){
 
         return userRepository.findAll().stream().map(UserGetOneResponseDto::from).toList();
+    }
+
+    @Transactional
+    public UserUpdateResponseDto update(Long id, UserUpdateRequestDto request) {
+
+        User user = userRepository.findByIdOrElseThrow(id);
+
+        if(!user.getPassword().equals(request.getPassword())){
+            throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        user.update(request);
+        return UserUpdateResponseDto.from(user);
     }
 }

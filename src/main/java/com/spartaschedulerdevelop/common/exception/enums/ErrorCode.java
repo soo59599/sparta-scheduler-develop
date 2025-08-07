@@ -14,6 +14,10 @@ public enum ErrorCode {
     USER_LIMIT_EXCEEDED("USR-002", "가입 가능한 사용자 수를 초과했습니다"),
     USER_NOT_FOUND("USR-003", "해당 사용자를 찾을 수 없습니다."),
 
+    //인증 관련 오류
+    INVALID_PASSWORD("AUTH-001", "비밀번호가 일치하지 않습니다"),
+    UNAUTHORIZED("AUTH-002", "인증이 필요합니다"),
+
     //일정 관련 오류
     SCHEDULE_NOT_FOUND("SCH-001", "해당 글을 찾을 수 없습니다.");
 

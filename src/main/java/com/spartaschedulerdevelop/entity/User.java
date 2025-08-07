@@ -1,6 +1,7 @@
 package com.spartaschedulerdevelop.entity;
 
 import com.spartaschedulerdevelop.dto.user.UserSaveRequestDto;
+import com.spartaschedulerdevelop.dto.user.UserUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,13 @@ public class User extends BaseEntity{
         );
     }
 
+    public void update(UserUpdateRequestDto request){
+        if(request.getEmail() != null && !request.getEmail().isEmpty()){
+            this.email = request.getEmail();
+        }
+        if(request.getPassword() != null && !request.getPassword().isEmpty()){
+            this.password = request.getPassword();
+        }
+    }
 
 }

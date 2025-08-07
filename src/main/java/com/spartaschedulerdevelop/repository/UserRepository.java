@@ -11,12 +11,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByName(String name);
 
-    default User findByNameOrElseThrow(String name){
-        return findByName(name).orElseThrow(() -> new MyCustomException(ErrorCode.USER_NOT_FOUND));
-    }
-
     default User findByIdOrElseThrow(Long id){
         return findById(id).orElseThrow(() -> new MyCustomException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    default User findByNameOrElseThrow(String name){
+        return findByName(name).orElseThrow(() -> new MyCustomException(ErrorCode.USER_NOT_FOUND));
     }
 
 }

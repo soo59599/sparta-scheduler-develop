@@ -1,8 +1,6 @@
 package com.spartaschedulerdevelop.controller;
 
-import com.spartaschedulerdevelop.dto.user.UserSaveRequestDto;
-import com.spartaschedulerdevelop.dto.user.UserSaveResponseDto;
-import com.spartaschedulerdevelop.dto.user.UserGetOneResponseDto;
+import com.spartaschedulerdevelop.dto.user.*;
 import com.spartaschedulerdevelop.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +34,12 @@ public class UserController {
     public ResponseEntity<List<UserGetOneResponseDto>> findAll(){
         List<UserGetOneResponseDto> responses = userService.findAll();
         return ResponseEntity.ok(responses);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserUpdateResponseDto> update(@PathVariable Long id, @Valid @RequestBody UserUpdateRequestDto request) {
+        UserUpdateResponseDto response = userService.update(id, request);
+        return ResponseEntity.ok(response);
     }
 
 
