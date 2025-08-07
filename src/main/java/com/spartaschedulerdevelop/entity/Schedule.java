@@ -1,6 +1,7 @@
 package com.spartaschedulerdevelop.entity;
 
 import com.spartaschedulerdevelop.dto.schedule.ScheduleSaveRequestDto;
+import com.spartaschedulerdevelop.dto.schedule.ScheduleUpdateRequestDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,5 +35,10 @@ public class Schedule extends BaseEntity {
                 request.getTitle(),
                 request.getContent()
         );
+    }
+
+    public void updateTitleAndContent(ScheduleUpdateRequestDto request) {
+        if(request.getTitle() != null && !request.getTitle().trim().isEmpty()) this.title = request.getTitle();
+        if(request.getContent() != null && !request.getContent().trim().isEmpty()) this.content = request.getContent();
     }
 }

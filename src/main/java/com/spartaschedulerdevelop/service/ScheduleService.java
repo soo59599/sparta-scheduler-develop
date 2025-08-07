@@ -50,4 +50,15 @@ public class ScheduleService {
                         .toList();
     }
 
+    @Transactional
+    public ScheduleUpdateResponseDto update(Long id, ScheduleUpdateRequestDto request) {
+
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new MyCustomException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        schedule.updateTitleAndContent(request);
+
+        return ScheduleUpdateResponseDto.from(schedule);
+    }
+
 }

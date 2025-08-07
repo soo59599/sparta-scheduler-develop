@@ -35,4 +35,10 @@ public class ScheduleController {
         List<ScheduleGetAllResponseDto> responses = scheduleService.findAll();
         return ResponseEntity.ok(responses);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ScheduleUpdateResponseDto> update(@PathVariable Long id, @Valid @RequestBody ScheduleUpdateRequestDto request) {
+        ScheduleUpdateResponseDto response = scheduleService.update(id, request);
+        return ResponseEntity.ok(response);
+    }
 }
