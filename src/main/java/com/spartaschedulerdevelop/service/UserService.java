@@ -51,4 +51,14 @@ public class UserService {
         user.update(request);
         return UserUpdateResponseDto.from(user);
     }
+
+    public void delete(Long id, String password) {
+        User user = userRepository.findByIdOrElseThrow(id);
+
+        if(!user.getPassword().equals(password)){
+            throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        userRepository.deleteById(id);
+    }
 }
