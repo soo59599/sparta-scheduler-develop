@@ -9,6 +9,9 @@ import com.spartaschedulerdevelop.entity.Schedule;
 import com.spartaschedulerdevelop.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +19,7 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
+    @Transactional
     public ScheduleSaveResponseDto save(ScheduleSaveRequestDto request) {
 
         Schedule savedSchedule =
@@ -25,6 +29,7 @@ public class ScheduleService {
         return ScheduleSaveResponseDto.from(savedSchedule);
     }
 
+    @Transactional(readOnly = true)
     public ScheduleGetOneResponseDto findById(Long id) {
 
         Schedule schedule =
@@ -34,4 +39,15 @@ public class ScheduleService {
 
         return ScheduleGetOneResponseDto.from(schedule);
     }
+
+    @Transactional(readOnly = true)
+    public List<ScheduleGetOneResponseDto> findAll() {
+
+        return scheduleRepository
+                        .findAllByOrderByCreatedAtDesc()
+                        .stream()
+                        .map(ScheduleGetOneResponseDto::from)
+                        .toList();
+    }
+
 }
