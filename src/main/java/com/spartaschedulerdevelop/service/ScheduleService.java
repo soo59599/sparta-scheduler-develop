@@ -2,10 +2,9 @@ package com.spartaschedulerdevelop.service;
 
 import com.spartaschedulerdevelop.common.exception.MyCustomException;
 import com.spartaschedulerdevelop.common.exception.enums.ErrorCode;
-import com.spartaschedulerdevelop.dto.schedule.ScheduleGetOneResponseDto;
-import com.spartaschedulerdevelop.dto.schedule.ScheduleSaveRequestDto;
-import com.spartaschedulerdevelop.dto.schedule.ScheduleSaveResponseDto;
+import com.spartaschedulerdevelop.dto.schedule.*;
 import com.spartaschedulerdevelop.entity.Schedule;
+import com.spartaschedulerdevelop.mapper.ScheduleMapper;
 import com.spartaschedulerdevelop.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleMapper scheduleMapper;
 
     @Transactional
     public ScheduleSaveResponseDto save(ScheduleSaveRequestDto request) {
@@ -26,7 +26,7 @@ public class ScheduleService {
                 scheduleRepository
                 .save(Schedule.create(request));
 
-        return ScheduleSaveResponseDto.from(savedSchedule);
+        return scheduleMapper.from(savedSchedule);
     }
 
     @Transactional(readOnly = true)
@@ -41,12 +41,12 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleGetOneResponseDto> findAll() {
+    public List<ScheduleGetAllResponseDto> findAll() {
 
         return scheduleRepository
                         .findAllByOrderByCreatedAtDesc()
                         .stream()
-                        .map(ScheduleGetOneResponseDto::from)
+                        .map(ScheduleGetAllResponseDto::from)
                         .toList();
     }
 
