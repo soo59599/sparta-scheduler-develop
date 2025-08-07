@@ -1,5 +1,6 @@
 package com.spartaschedulerdevelop.service;
 
+import com.spartaschedulerdevelop.dto.user.UserGetOneResponseDto;
 import com.spartaschedulerdevelop.dto.user.UserSaveRequestDto;
 import com.spartaschedulerdevelop.dto.user.UserSaveResponseDto;
 import com.spartaschedulerdevelop.entity.User;
@@ -16,7 +17,17 @@ public class UserService {
 
     @Transactional
     public UserSaveResponseDto save(UserSaveRequestDto request) {
-        User save = userRepository.save(User.create(request));
-        return UserSaveResponseDto.from(save);
+
+        User savedUser = userRepository.save(User.create(request));
+
+        return UserSaveResponseDto.from(savedUser);
+    }
+
+    @Transactional(readOnly = true)
+    public UserGetOneResponseDto findById(Long id){
+
+        User user = userRepository.findByIdOrElseThrow(id);
+
+        return UserGetOneResponseDto.from(user);
     }
 }
