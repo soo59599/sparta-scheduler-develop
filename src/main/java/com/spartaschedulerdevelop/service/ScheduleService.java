@@ -4,7 +4,6 @@ import com.spartaschedulerdevelop.common.exception.MyCustomException;
 import com.spartaschedulerdevelop.common.exception.enums.ErrorCode;
 import com.spartaschedulerdevelop.dto.schedule.*;
 import com.spartaschedulerdevelop.entity.Schedule;
-import com.spartaschedulerdevelop.mapper.ScheduleMapper;
 import com.spartaschedulerdevelop.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final ScheduleMapper scheduleMapper;
 
     @Transactional
     public ScheduleSaveResponseDto save(ScheduleSaveRequestDto request) {
@@ -26,7 +24,7 @@ public class ScheduleService {
                 scheduleRepository
                 .save(Schedule.create(request));
 
-        return scheduleMapper.from(savedSchedule);
+        return ScheduleSaveResponseDto.from(savedSchedule);
     }
 
     @Transactional(readOnly = true)
