@@ -1,6 +1,6 @@
 package com.spartaschedulerdevelop.entity;
 
-import com.spartaschedulerdevelop.dto.ScheduleSaveRequestDto;
+import com.spartaschedulerdevelop.dto.schedule.ScheduleSaveRequestDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

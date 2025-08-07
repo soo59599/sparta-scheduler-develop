@@ -1,4 +1,4 @@
-package com.spartaschedulerdevelop.dto;
+package com.spartaschedulerdevelop.dto.schedule;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -16,7 +16,7 @@ public class ScheduleSaveRequestDto {
     private String title;
 
     @NotBlank
-    @Size(max= 300, message = "내용은 300글자 애녀여야 합니다.")
+    @Size(max= 300, message = "내용은 300글자 이내여야 합니다.")
     private String content;
 
 }
