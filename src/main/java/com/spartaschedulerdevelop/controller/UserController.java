@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -28,6 +30,12 @@ public class UserController {
     public ResponseEntity<UserGetOneResponseDto> findById (@PathVariable Long id){
         UserGetOneResponseDto response = userService.findById(id);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserGetOneResponseDto>> findAll(){
+        List<UserGetOneResponseDto> responses = userService.findAll();
+        return ResponseEntity.ok(responses);
     }
 
 
