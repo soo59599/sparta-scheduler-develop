@@ -1,4 +1,4 @@
-package com.scheduler.spartaschedulerdevelop;
+package com.spartaschedulerdevelop.spartaschedulerdevelop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
