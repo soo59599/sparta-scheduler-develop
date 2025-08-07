@@ -16,14 +16,29 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String msg = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        return ResponseEntity.badRequest().body("입력값 오류: " + msg);
+
+        ErrorResponse error =
+                ErrorResponse.of(
+                HttpStatus.BAD_REQUEST,
+                "VAL-001",
+                "입력값 오류: " + msg,
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.badRequest().body(error);
     }
 
     @ExceptionHandler(MyCustomException.class)
     public ResponseEntity<ErrorResponse> handleCustom(MyCustomException ex, HttpServletRequest request) {
-        ErrorResponse error = ErrorResponse.of(HttpStatus.BAD_REQUEST, ex.getCode(), ex.getMessage(), request.getRequestURI());
+        ErrorResponse error =
+                ErrorResponse.of(
+                HttpStatus.BAD_REQUEST,
+                        ex.getCode(),
+                        ex.getMessage(),
+                        request.getRequestURI()
+                );
         return ResponseEntity.badRequest().body(error);
     }
 
