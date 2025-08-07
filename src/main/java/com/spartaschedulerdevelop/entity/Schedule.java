@@ -1,6 +1,6 @@
 package com.spartaschedulerdevelop.entity;
 
-import com.spartaschedulerdevelop.dto.ScheduleSaveRequest;
+import com.spartaschedulerdevelop.dto.ScheduleSaveRequestDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +28,7 @@ public class Schedule extends BaseEntity {
         this.content = content;
     }
 
-    public static Schedule create(ScheduleSaveRequest request) {
+    public static Schedule create(ScheduleSaveRequestDto request) {
         return new Schedule(
                 request.getAuthor(),
                 request.getTitle(),
