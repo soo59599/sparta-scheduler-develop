@@ -1,8 +1,6 @@
 package com.spartaschedulerdevelop.controller;
 
-import com.spartaschedulerdevelop.dto.schedule.ScheduleSaveRequestDto;
-import com.spartaschedulerdevelop.dto.schedule.ScheduleSaveResponseDto;
-import com.spartaschedulerdevelop.dto.schedule.ScheduleGetOneResponseDto;
+import com.spartaschedulerdevelop.dto.schedule.*;
 import com.spartaschedulerdevelop.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/schedules")
@@ -28,5 +28,11 @@ public class ScheduleController {
     public ResponseEntity<ScheduleGetOneResponseDto> findById(@PathVariable Long id){
         ScheduleGetOneResponseDto response = scheduleService.findById(id);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ScheduleGetAllResponseDto>> findAll(){
+        List<ScheduleGetAllResponseDto> responses = scheduleService.findAll();
+        return ResponseEntity.ok(responses);
     }
 }
