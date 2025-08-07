@@ -18,6 +18,8 @@ public class User extends BaseEntity{
 
     private String email;
 
+    private String password;
+
     private User(String name, String email){
         this.name = name;
         this.email = email;
