@@ -1,10 +1,13 @@
 package com.spartaschedulerdevelop.service;
 
 import com.spartaschedulerdevelop.common.exception.MyCustomException;
-import com.spartaschedulerdevelop.common.exception.enums.ErrorCode;
+import com.spartaschedulerdevelop.common.exception.ErrorCode;
+import com.spartaschedulerdevelop.dto.login.LoginRequestDto;
+import com.spartaschedulerdevelop.dto.login.LoginResponseDto;
 import com.spartaschedulerdevelop.dto.user.*;
 import com.spartaschedulerdevelop.entity.User;
 import com.spartaschedulerdevelop.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,5 +63,16 @@ public class UserService {
         }
 
         userRepository.deleteById(id);
+    }
+
+    public LoginResponseDto authenticate(LoginRequestDto request, HttpSession session) {
+        User user = userRepository.findByEmailOrElseThrow(request.getEmail());
+        if(!user.getPassword().equals(request.getPassword())){
+            throw new MyCustomException(ErrorCode.INVALID_CREDENTIALS);
+        }
+
+        session.setAttribute("sessionKey값", user.getId());
+
+        return LoginResponseDto.toDto(user);
     }
 }

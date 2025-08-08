@@ -1,4 +1,4 @@
-package com.spartaschedulerdevelop.common.exception.response;
+package com.spartaschedulerdevelop.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +13,9 @@ public class ErrorResponse {
     private String errorCode;
     private String message;
     private String path;
-    private LocalDateTime timestamp;
+    private String timestamp;
 
     public static ErrorResponse of(HttpStatus status, String errorCode, String message, String path) {
-        return new ErrorResponse(status.value(), errorCode, message, path, LocalDateTime.now());
+        return new ErrorResponse(status.value(), errorCode, message, path, LocalDateTime.now().toString());
     }
 }

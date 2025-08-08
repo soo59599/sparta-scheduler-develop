@@ -1,6 +1,5 @@
 package com.spartaschedulerdevelop.common.exception;
 
-import com.spartaschedulerdevelop.common.exception.response.ErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -12,11 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Hidden
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
-    }
 
+    //@Vaild 예외
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String msg = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
@@ -34,14 +30,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MyCustomException.class)
     public ResponseEntity<ErrorResponse> handleCustom(MyCustomException ex, HttpServletRequest request) {
+
         ErrorResponse error =
                 ErrorResponse.of(
-                HttpStatus.BAD_REQUEST,
+                        ex.getHttpStatus(),
                         ex.getCode(),
                         ex.getMessage(),
                         request.getRequestURI()
                 );
-        return ResponseEntity.badRequest().body(error);
+        return ResponseEntity.status(ex.getHttpStatus()).body(error);
     }
 
 }

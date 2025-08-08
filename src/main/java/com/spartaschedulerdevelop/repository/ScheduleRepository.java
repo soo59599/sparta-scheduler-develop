@@ -1,7 +1,7 @@
 package com.spartaschedulerdevelop.repository;
 
 import com.spartaschedulerdevelop.common.exception.MyCustomException;
-import com.spartaschedulerdevelop.common.exception.enums.ErrorCode;
+import com.spartaschedulerdevelop.common.exception.ErrorCode;
 import com.spartaschedulerdevelop.entity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
