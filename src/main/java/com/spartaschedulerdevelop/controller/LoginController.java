@@ -3,6 +3,7 @@ package com.spartaschedulerdevelop.controller;
 import com.spartaschedulerdevelop.dto.login.LoginRequestDto;
 import com.spartaschedulerdevelop.dto.login.LoginResponseDto;
 import com.spartaschedulerdevelop.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,9 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate();
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session!=null) session.invalidate();
         return ResponseEntity.ok("로그아웃 성공");
     }
 }
