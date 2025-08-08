@@ -5,6 +5,7 @@ import com.spartaschedulerdevelop.dto.schedule.ScheduleUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @Entity
 @Getter
@@ -27,16 +28,16 @@ public class Schedule extends BaseEntity {
         this.content = content;
     }
 
-    public static Schedule create(ScheduleSaveRequestDto request) {
+    public static Schedule toSchedule(ScheduleSaveRequestDto request) {
         return new Schedule(
-                request.getTitle(),
-                request.getContent()
+                request.title(),
+                request.content()
         );
     }
 
     public void updateTitleAndContent(ScheduleUpdateRequestDto request) {
-        if(request.getTitle() != null && !request.getTitle().trim().isEmpty()) this.title = request.getTitle();
-        if(request.getContent() != null && !request.getContent().trim().isEmpty()) this.content = request.getContent();
+        if(StringUtils.hasText(request.title())) this.title = request.title();
+        if(StringUtils.hasText(request.content())) this.content = request.content();
     }
 
     public void setUser(User user) {
