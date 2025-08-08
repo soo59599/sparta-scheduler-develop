@@ -4,6 +4,7 @@ import com.spartaschedulerdevelop.common.exception.ErrorCode;
 import com.spartaschedulerdevelop.common.exception.MyCustomException;
 import com.spartaschedulerdevelop.dto.user.*;
 import com.spartaschedulerdevelop.entity.User;
+import com.spartaschedulerdevelop.mapper.UserMapper;
 import com.spartaschedulerdevelop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,50 +17,51 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Transactional
-    public UserSaveResponseDto save(UserSaveRequestDto request) {
+    public UserSaveResponseDto saveUser(UserSaveRequestDto request) {
 
-        User savedUser = userRepository.save(User.create(request));
+        User savedUser = userRepository.save(User.toUserEntity(request));
 
-        return UserSaveResponseDto.from(savedUser);
+        return userMapper.toUserSaveResponseDto(savedUser);
     }
 
     @Transactional(readOnly = true)
-    public UserGetOneResponseDto findById(Long id){
+    public UserGetOneResponseDto getUser(Long userId){
 
-        User user = userRepository.findByIdOrElseThrow(id);
+        User user = userRepository.findByIdOrElseThrow(userId);
 
-        return UserGetOneResponseDto.from(user);
+        return userMapper.toUserGetOneResponseDto(user);
     }
 
     @Transactional(readOnly = true)
-    public List<UserGetOneResponseDto> findAll(){
+    public List<UserGetOneResponseDto> getUsers(){
 
-        return userRepository.findAll().stream().map(UserGetOneResponseDto::from).toList();
+        return userRepository.findAll().stream().map(userMapper::toUserGetOneResponseDto).toList();
     }
 
     @Transactional
-    public UserUpdateResponseDto update(Long id, UserUpdateRequestDto request) {
+    public UserUpdateResponseDto updateUser(Long userId, UserUpdateRequestDto request) {
 
-        User user = userRepository.findByIdOrElseThrow(id);
+        User user = userRepository.findByIdOrElseThrow(userId);
 
-        if(!user.getPassword().equals(request.getPassword())){
+        if(!user.getPassword().equals(request.password())){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         user.update(request);
-        return UserUpdateResponseDto.from(user);
+        return userMapper.toUserUpdateResponseDto(user);
     }
 
-    public void delete(Long id, String password) {
-        User user = userRepository.findByIdOrElseThrow(id);
+    public void deleteUser(Long userId, String password) {
+        User user = userRepository.findByIdOrElseThrow(userId);
 
         if(!user.getPassword().equals(password)){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
         }
 
-        userRepository.deleteById(id);
+        userRepository.deleteById(userId);
     }
 
 

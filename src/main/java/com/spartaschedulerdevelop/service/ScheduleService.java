@@ -29,7 +29,7 @@ public class ScheduleService {
         Long userId = (Long) session.getAttribute("userId");
         User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
-        Schedule schedule = Schedule.toSchedule(request);
+        Schedule schedule = Schedule.toScheduleEntity(request);
         schedule.setUser(user);
 
         Schedule savedSchedule = scheduleRepository.save(schedule);

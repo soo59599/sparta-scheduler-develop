@@ -28,7 +28,7 @@ public class Schedule extends BaseEntity {
         this.content = content;
     }
 
-    public static Schedule toSchedule(ScheduleSaveRequestDto request) {
+    public static Schedule toScheduleEntity(ScheduleSaveRequestDto request) {
         return new Schedule(
                 request.title(),
                 request.content()
