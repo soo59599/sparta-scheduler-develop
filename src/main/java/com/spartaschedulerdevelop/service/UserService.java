@@ -2,6 +2,7 @@ package com.spartaschedulerdevelop.service;
 
 import com.spartaschedulerdevelop.common.exception.ErrorCode;
 import com.spartaschedulerdevelop.common.exception.MyCustomException;
+import com.spartaschedulerdevelop.common.util.MyCustomUtils;
 import com.spartaschedulerdevelop.dto.user.*;
 import com.spartaschedulerdevelop.entity.User;
 import com.spartaschedulerdevelop.mapper.UserMapper;
@@ -30,7 +31,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserGetOneResponseDto getUser(Long userId){
 
-        User user = userRepository.findByIdOrElseThrow(userId);
+        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
         return userMapper.toUserGetOneResponseDto(user);
     }
@@ -44,7 +45,7 @@ public class UserService {
     @Transactional
     public UserUpdateResponseDto updateUser(Long userId, UserUpdateRequestDto request) {
 
-        User user = userRepository.findByIdOrElseThrow(userId);
+        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
         if(!user.getPassword().equals(request.password())){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
@@ -55,7 +56,7 @@ public class UserService {
     }
 
     public void deleteUser(Long userId, String password) {
-        User user = userRepository.findByIdOrElseThrow(userId);
+        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
         if(!user.getPassword().equals(password)){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
