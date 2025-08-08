@@ -5,6 +5,7 @@ import com.spartaschedulerdevelop.dto.user.UserUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @Entity
 @Table(name="users")
@@ -21,25 +22,23 @@ public class User extends BaseEntity{
 
     private String password;
 
-    private User(String name, String email){
+    private User(String name, String email,  String password) {
         this.name = name;
         this.email = email;
+        this.password = password;
     }
 
-    public static User create(UserSaveRequestDto request){
+    public static User toUserEntity(UserSaveRequestDto request){
         return new User(
-                request.getName(),
-                request.getEmail()
+                request.name(),
+                request.email(),
+                request.password()
         );
     }
 
     public void update(UserUpdateRequestDto request){
-        if(request.getEmail() != null && !request.getEmail().isEmpty()){
-            this.email = request.getEmail();
-        }
-        if(request.getPassword() != null && !request.getPassword().isEmpty()){
-            this.password = request.getPassword();
-        }
+        if(StringUtils.hasText(request.email())) this.email = request.email();
+        if(StringUtils.hasText(request.password())) this.password = request.password();
     }
 
 }
