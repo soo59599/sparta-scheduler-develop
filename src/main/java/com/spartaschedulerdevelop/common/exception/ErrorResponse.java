@@ -1,4 +1,4 @@
-package com.spartaschedulerdevelop.common.exception.response;
+package com.spartaschedulerdevelop.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
