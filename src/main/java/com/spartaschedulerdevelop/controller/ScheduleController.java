@@ -2,6 +2,7 @@ package com.spartaschedulerdevelop.controller;
 
 import com.spartaschedulerdevelop.dto.schedule.*;
 import com.spartaschedulerdevelop.service.ScheduleService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,32 +19,33 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleSaveResponseDto> save(@Valid @RequestBody ScheduleSaveRequestDto request) {
-        ScheduleSaveResponseDto response = scheduleService.save(request);
+    public ResponseEntity<ScheduleSaveResponseDto> saveSchedule(@Valid @RequestBody ScheduleSaveRequestDto request, HttpSession session) {
+        
+        ScheduleSaveResponseDto response = scheduleService.saveSchedule(request, session);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ScheduleGetOneResponseDto> findById(@PathVariable Long id){
-        ScheduleGetOneResponseDto response = scheduleService.findById(id);
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleGetOneResponseDto> getSchedule(@PathVariable Long scheduleId){
+        ScheduleGetOneResponseDto response = scheduleService.getSchedule(scheduleId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleGetOneResponseDto>> findAll(){
-        List<ScheduleGetOneResponseDto> responses = scheduleService.findAll();
+    public ResponseEntity<List<ScheduleGetOneResponseDto>> getSchedules(){
+        List<ScheduleGetOneResponseDto> responses = scheduleService.getSchedules();
         return ResponseEntity.ok(responses);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<ScheduleUpdateResponseDto> update(@PathVariable Long id, @Valid @RequestBody ScheduleUpdateRequestDto request) {
-        ScheduleUpdateResponseDto response = scheduleService.update(id, request);
+    @PatchMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleUpdateResponseDto> updateSchedule(@PathVariable Long scheduleId, @Valid @RequestBody ScheduleUpdateRequestDto request) {
+        ScheduleUpdateResponseDto response = scheduleService.updateSchedule(scheduleId, request);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        scheduleService.delete(id);
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId){
+        scheduleService.deleteSchedule(scheduleId);
         return ResponseEntity.noContent().build();
     }
 }
