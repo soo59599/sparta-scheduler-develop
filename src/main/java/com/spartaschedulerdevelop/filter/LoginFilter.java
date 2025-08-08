@@ -45,7 +45,7 @@ public class LoginFilter implements Filter {
 
             // 로그인하지 않은 사용자인 경우
             if (session == null || session.getAttribute("sessionKey값") == null) {
-                ErrorResponse error = ErrorResponse.of(
+                ErrorResponse errorResponse = ErrorResponse.of(
                         HttpStatus.UNAUTHORIZED,
                         "AUTH-004",
                         "로그인이 필요합니다",
@@ -54,7 +54,9 @@ public class LoginFilter implements Filter {
 
                 httpResponse.setStatus(401);
                 httpResponse.setContentType("application/json;charset=UTF-8");
-                httpResponse.getWriter().write(objectMapper.writeValueAsString(error));
+                String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+
+                httpResponse.getWriter().write(jsonResponse);
                 return;
             }
 
