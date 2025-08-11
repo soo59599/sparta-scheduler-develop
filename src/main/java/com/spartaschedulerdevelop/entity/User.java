@@ -28,17 +28,17 @@ public class User extends BaseEntity{
         this.password = password;
     }
 
-    public static User toUserEntity(UserSaveRequestDto request){
+    public static User toUserEntity(UserSaveRequestDto request, String password){
         return new User(
                 request.name(),
                 request.email(),
-                request.password()
+                password
         );
     }
 
     public void update(UserUpdateRequestDto request){
         if(StringUtils.hasText(request.email())) this.email = request.email();
-        if(StringUtils.hasText(request.password())) this.password = request.password();
+        if(StringUtils.hasText(request.name())) this.name = request.name();
     }
 
 }

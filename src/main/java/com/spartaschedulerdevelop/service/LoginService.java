@@ -1,5 +1,6 @@
 package com.spartaschedulerdevelop.service;
 
+import com.spartaschedulerdevelop.common.config.PasswordEncoder;
 import com.spartaschedulerdevelop.common.exception.ErrorCode;
 import com.spartaschedulerdevelop.common.exception.MyCustomException;
 import com.spartaschedulerdevelop.dto.login.LoginRequestDto;
@@ -9,7 +10,6 @@ import com.spartaschedulerdevelop.mapper.LoginMapper;
 import com.spartaschedulerdevelop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -17,14 +17,14 @@ public class LoginService {
 
     private final UserRepository userRepository;
     private final LoginMapper loginMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public LoginResponseDto authenticate(LoginRequestDto request) {
-        User user = userRepository.findByEmail(request.email()).orElseThrow(() -> new MyCustomException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findByEmail(request.email()).orElseThrow(() -> new MyCustomException(ErrorCode.INVALID_CREDENTIALS));
 
-        if(!ObjectUtils.nullSafeEquals(user.getPassword(), request.password())){
+        if(!passwordEncoder.matches(request.password(), user.getPassword())){
             throw new MyCustomException(ErrorCode.INVALID_CREDENTIALS);
         }
-
 
         return loginMapper.toLoginResponseDto(user);
     }
