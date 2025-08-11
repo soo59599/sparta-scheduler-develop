@@ -1,27 +1,35 @@
 package com.spartaschedulerdevelop.controller;
 
+import com.spartaschedulerdevelop.dto.comment.CommentGetOneResponseDto;
 import com.spartaschedulerdevelop.dto.comment.CommentSaveRequestDto;
 import com.spartaschedulerdevelop.dto.comment.CommentSaveResponseDto;
 import com.spartaschedulerdevelop.service.CommentService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
-@RequestMapping("/comment")
+@RequestMapping("/schedules/{scheduleId}/comment")
 @RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<CommentSaveResponseDto> saveComment(@RequestBody CommentSaveRequestDto request, HttpSession session) {
-        CommentSaveResponseDto response = commentService.saveComment(request, session);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<CommentSaveResponseDto> saveComment(@RequestBody CommentSaveRequestDto request, @PathVariable Long scheduleId, HttpSession session) {
+        CommentSaveResponseDto response = commentService.saveComment(request,scheduleId, session);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CommentGetOneResponseDto>> getComment(@PathVariable Long scheduleId) {
+        List<CommentGetOneResponseDto> responses = commentService.getComments(scheduleId);
+        return ResponseEntity.ok(responses);
     }
 
 }

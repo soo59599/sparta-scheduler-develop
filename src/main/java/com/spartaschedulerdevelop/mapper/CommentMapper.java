@@ -1,5 +1,6 @@
 package com.spartaschedulerdevelop.mapper;
 
+import com.spartaschedulerdevelop.dto.comment.CommentGetOneResponseDto;
 import com.spartaschedulerdevelop.dto.comment.CommentSaveResponseDto;
 import com.spartaschedulerdevelop.entity.Comment;
 import org.mapstruct.Mapper;
@@ -12,5 +13,10 @@ public interface CommentMapper {
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "schedule.id", target = "scheduleId")
     CommentSaveResponseDto toCommentSaveResponseDto(Comment comment);
+
+    @Mapping(source = "id", target = "commentId")
+    @Mapping(source = "user.id", target = "userId")
+    @Mapping(source = "schedule.id", target = "scheduleId")
+    CommentGetOneResponseDto toCommentGetOneResponseDto(Comment comment);
 
 }
