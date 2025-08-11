@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 
 public record UserSaveResponseDto(
-        Long id,
+        Long userId,
         String name,
         String email,
         LocalDateTime createdAt,

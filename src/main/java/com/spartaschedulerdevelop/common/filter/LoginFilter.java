@@ -1,4 +1,4 @@
-package com.spartaschedulerdevelop.filter;
+package com.spartaschedulerdevelop.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spartaschedulerdevelop.common.exception.ErrorResponse;
@@ -47,7 +47,7 @@ public class LoginFilter implements Filter {
             if (session == null || session.getAttribute("userId") == null) {
                 ErrorResponse errorResponse = ErrorResponse.of(
                         HttpStatus.UNAUTHORIZED,
-                        "AUTH-004",
+                        "AUTH-002",
                         "로그인이 필요합니다",
                         httpRequest.getRequestURI()
                 );

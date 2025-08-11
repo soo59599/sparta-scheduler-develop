@@ -1,6 +1,6 @@
 package com.spartaschedulerdevelop.common.config;
 
-import com.spartaschedulerdevelop.filter.LoginFilter;
+import com.spartaschedulerdevelop.common.filter.LoginFilter;
 import jakarta.servlet.Filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

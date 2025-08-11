@@ -2,6 +2,7 @@ package com.spartaschedulerdevelop.controller;
 
 import com.spartaschedulerdevelop.dto.user.*;
 import com.spartaschedulerdevelop.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,16 +36,16 @@ public class UserController {
         return ResponseEntity.ok(responses);
     }
 
-    @PatchMapping("/{userId}")
-    public ResponseEntity<UserUpdateResponseDto> updateUser(@PathVariable Long userId, @Valid @RequestBody UserUpdateRequestDto request) {
-        UserUpdateResponseDto response = userService.updateUser(userId, request);
+    @PatchMapping("/me")
+    public ResponseEntity<UserUpdateResponseDto> updateUser(@Valid @RequestBody UserUpdateRequestDto request, HttpSession session) {
+        UserUpdateResponseDto response = userService.updateUser(request, session);
         return ResponseEntity.ok(response);
     }
 
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId, @RequestParam String password){
-        userService.deleteUser(userId, password);
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteUser(@Valid @RequestBody UserDeleteRequestDto request, HttpSession session){
+        userService.deleteUser(request, session);
         return ResponseEntity.noContent().build();
     }
 
