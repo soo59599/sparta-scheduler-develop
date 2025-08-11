@@ -28,7 +28,7 @@ public class UserService {
     @Transactional
     public UserSaveResponseDto saveUser(UserSaveRequestDto request) {
 
-        if(userRepository.existByEmail(request.email())){
+        if(userRepository.existsByEmail(request.email())){
             throw new MyCustomException(ErrorCode.DUPLICATE_USER);
         }
 
