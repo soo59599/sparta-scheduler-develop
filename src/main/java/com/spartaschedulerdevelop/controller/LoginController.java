@@ -20,7 +20,9 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request, HttpSession session){
-        LoginResponseDto user = loginService.authenticate(request, session);
+        LoginResponseDto user = loginService.authenticate(request);
+
+        session.setAttribute("userId", user.id());
 
         return ResponseEntity.ok(user);
     }
