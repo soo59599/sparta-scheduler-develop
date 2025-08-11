@@ -1,5 +1,6 @@
 package com.spartaschedulerdevelop.service;
 
+import com.spartaschedulerdevelop.common.config.PasswordEncoder;
 import com.spartaschedulerdevelop.common.exception.ErrorCode;
 import com.spartaschedulerdevelop.common.exception.MyCustomException;
 import com.spartaschedulerdevelop.common.util.MyCustomUtils;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -23,14 +23,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ScheduleRepository scheduleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserSaveResponseDto saveUser(UserSaveRequestDto request) {
 
-        userRepository.findByEmail(request.email())
-                .ifPresent(user -> { throw new MyCustomException(ErrorCode.DUPLICATE_USER); });
+        if(userRepository.existByEmail(request.email())){
+            throw new MyCustomException(ErrorCode.DUPLICATE_USER);
+        }
 
-        User savedUser = userRepository.save(User.toUserEntity(request));
+        String encodedPassword = passwordEncoder.encode(request.password());
+
+        User savedUser = userRepository.save(User.toUserEntity(request, encodedPassword));
 
         return userMapper.toUserSaveResponseDto(savedUser);
     }
@@ -55,7 +59,7 @@ public class UserService {
         Long userId = MyCustomUtils.getCurrentUserId(session);
         User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
-        if(!ObjectUtils.nullSafeEquals(user.getPassword(), request.password())){
+        if(!passwordEncoder.matches(request.password(), user.getPassword())){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
         }
 
@@ -70,7 +74,7 @@ public class UserService {
         Long userId = MyCustomUtils.getCurrentUserId(session);
         User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
-        if(!ObjectUtils.nullSafeEquals(request.password(), user.getPassword())){
+        if(!passwordEncoder.matches(request.password(), user.getPassword())){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
         }
 

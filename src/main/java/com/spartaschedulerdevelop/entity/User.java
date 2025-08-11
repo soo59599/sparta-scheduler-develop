@@ -28,11 +28,11 @@ public class User extends BaseEntity{
         this.password = password;
     }
 
-    public static User toUserEntity(UserSaveRequestDto request){
+    public static User toUserEntity(UserSaveRequestDto request, String password){
         return new User(
                 request.name(),
                 request.email(),
-                request.password()
+                password
         );
     }
 
