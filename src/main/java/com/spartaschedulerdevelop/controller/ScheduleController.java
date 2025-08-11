@@ -38,14 +38,14 @@ public class ScheduleController {
     }
 
     @PatchMapping("/{scheduleId}")
-    public ResponseEntity<ScheduleUpdateResponseDto> updateSchedule(@PathVariable Long scheduleId, @Valid @RequestBody ScheduleUpdateRequestDto request) {
-        ScheduleUpdateResponseDto response = scheduleService.updateSchedule(scheduleId, request);
+    public ResponseEntity<ScheduleUpdateResponseDto> updateSchedule(@PathVariable Long scheduleId, @Valid @RequestBody ScheduleUpdateRequestDto request, HttpSession session) {
+        ScheduleUpdateResponseDto response = scheduleService.updateSchedule(scheduleId, request, session);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId){
-        scheduleService.deleteSchedule(scheduleId);
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId, HttpSession session){
+        scheduleService.deleteSchedule(scheduleId, session);
         return ResponseEntity.noContent().build();
     }
 }

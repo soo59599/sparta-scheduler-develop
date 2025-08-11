@@ -1,6 +1,7 @@
 package com.spartaschedulerdevelop.service;
 
 import com.spartaschedulerdevelop.common.exception.ErrorCode;
+import com.spartaschedulerdevelop.common.exception.MyCustomException;
 import com.spartaschedulerdevelop.common.util.MyCustomUtils;
 import com.spartaschedulerdevelop.dto.schedule.*;
 import com.spartaschedulerdevelop.entity.Schedule;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class ScheduleService {
     @Transactional
     public ScheduleSaveResponseDto saveSchedule(ScheduleSaveRequestDto request, HttpSession session) {
 
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = MyCustomUtils.getCurrentUserId(session);
         User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
         Schedule schedule = Schedule.toScheduleEntity(request);
@@ -55,9 +57,14 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleUpdateResponseDto updateSchedule(Long scheduleId, ScheduleUpdateRequestDto request) {
+    public ScheduleUpdateResponseDto updateSchedule(Long scheduleId, ScheduleUpdateRequestDto request, HttpSession session) {
 
+        Long userId = MyCustomUtils.getCurrentUserId(session);
         Schedule schedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
+
+        if(!ObjectUtils.nullSafeEquals(schedule.getUser().getId(), userId)){
+            throw new MyCustomException(ErrorCode.FORBIDDEN_UPDATE);
+        }
 
         schedule.updateTitleAndContent(request);
 
@@ -65,8 +72,14 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void deleteSchedule(Long scheduleId) {
+    public void deleteSchedule(Long scheduleId, HttpSession session) {
+
+        Long userId = MyCustomUtils.getCurrentUserId(session);
         Schedule schedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
+
+        if(!ObjectUtils.nullSafeEquals(schedule.getUser().getId(), userId)){
+            throw new MyCustomException(ErrorCode.FORBIDDEN_DELETE);
+        }
 
         scheduleRepository.delete(schedule);
 
