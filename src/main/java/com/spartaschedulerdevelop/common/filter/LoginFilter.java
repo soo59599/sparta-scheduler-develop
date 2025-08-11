@@ -1,4 +1,4 @@
-package com.spartaschedulerdevelop.filter;
+package com.spartaschedulerdevelop.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spartaschedulerdevelop.common.exception.ErrorResponse;
