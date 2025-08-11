@@ -5,8 +5,10 @@ import com.spartaschedulerdevelop.common.exception.ErrorCode;
 import com.spartaschedulerdevelop.common.exception.MyCustomException;
 import com.spartaschedulerdevelop.common.util.MyCustomUtils;
 import com.spartaschedulerdevelop.dto.user.*;
+import com.spartaschedulerdevelop.entity.Schedule;
 import com.spartaschedulerdevelop.entity.User;
 import com.spartaschedulerdevelop.mapper.UserMapper;
+import com.spartaschedulerdevelop.repository.CommentRepository;
 import com.spartaschedulerdevelop.repository.ScheduleRepository;
 import com.spartaschedulerdevelop.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -77,6 +80,12 @@ public class UserService {
         if(!passwordEncoder.matches(request.password(), user.getPassword())){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
         }
+
+
+        List<Schedule> schedules = scheduleRepository.findByUserId(userId);
+        schedules.forEach(schedule ->
+                commentRepository.deleteByScheduleId(schedule.getId())
+        );
 
         scheduleRepository.deleteByUserId(userId);
 

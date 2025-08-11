@@ -7,6 +7,7 @@ import com.spartaschedulerdevelop.dto.schedule.*;
 import com.spartaschedulerdevelop.entity.Schedule;
 import com.spartaschedulerdevelop.entity.User;
 import com.spartaschedulerdevelop.mapper.ScheduleMapper;
+import com.spartaschedulerdevelop.repository.CommentRepository;
 import com.spartaschedulerdevelop.repository.ScheduleRepository;
 import com.spartaschedulerdevelop.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +25,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final ScheduleMapper scheduleMapper;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public ScheduleSaveResponseDto saveSchedule(ScheduleSaveRequestDto request, HttpSession session) {
@@ -79,6 +81,8 @@ public class ScheduleService {
         if(!ObjectUtils.nullSafeEquals(foundSchedule.getUser().getId(), currentUserId)){
             throw new MyCustomException(ErrorCode.FORBIDDEN_DELETE);
         }
+
+        commentRepository.deleteByScheduleId(scheduleId);
 
         scheduleRepository.delete(foundSchedule);
 
