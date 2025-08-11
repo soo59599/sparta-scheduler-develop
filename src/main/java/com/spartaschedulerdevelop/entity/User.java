@@ -38,7 +38,7 @@ public class User extends BaseEntity{
 
     public void update(UserUpdateRequestDto request){
         if(StringUtils.hasText(request.email())) this.email = request.email();
-        if(StringUtils.hasText(request.password())) this.password = request.password();
+        if(StringUtils.hasText(request.name())) this.name = request.name();
     }
 
 }
