@@ -2,7 +2,7 @@ package com.spartaschedulerdevelop.dto.comment;
 
 import java.time.LocalDateTime;
 
-public record CommentSaveResponseDto(
+public record CommentUpdateResponseDto(
 
         Long commentId,
         Long scheduleId,
@@ -10,4 +10,5 @@ public record CommentSaveResponseDto(
         String content,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt
-) {}
+) {
+}

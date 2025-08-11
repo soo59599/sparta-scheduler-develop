@@ -1,6 +1,7 @@
 package com.spartaschedulerdevelop.entity;
 
 import com.spartaschedulerdevelop.dto.comment.CommentSaveRequestDto;
+import com.spartaschedulerdevelop.dto.comment.CommentUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,5 +36,9 @@ public class Comment extends BaseEntity {
                 user,
                 schedule
         );
+    }
+
+    public void updateContent(CommentUpdateRequestDto request) {
+        this.content = request.content();
     }
 }

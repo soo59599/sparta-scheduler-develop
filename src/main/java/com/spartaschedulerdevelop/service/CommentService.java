@@ -1,10 +1,9 @@
 package com.spartaschedulerdevelop.service;
 
 import com.spartaschedulerdevelop.common.exception.ErrorCode;
+import com.spartaschedulerdevelop.common.exception.MyCustomException;
 import com.spartaschedulerdevelop.common.util.MyCustomUtils;
-import com.spartaschedulerdevelop.dto.comment.CommentGetOneResponseDto;
-import com.spartaschedulerdevelop.dto.comment.CommentSaveRequestDto;
-import com.spartaschedulerdevelop.dto.comment.CommentSaveResponseDto;
+import com.spartaschedulerdevelop.dto.comment.*;
 import com.spartaschedulerdevelop.entity.Comment;
 import com.spartaschedulerdevelop.entity.Schedule;
 import com.spartaschedulerdevelop.entity.User;
@@ -16,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -52,5 +52,32 @@ public class CommentService {
                 .toList();
     }
 
+    @Transactional
+    public CommentUpdateResponseDto updateComment(CommentUpdateRequestDto request, Long commentId, HttpSession session) {
 
+        Long currentUserId = MyCustomUtils.getCurrentUserId(session);
+        Comment foundComment = MyCustomUtils.findByIdOrElseThrow(commentRepository, commentId, ErrorCode.COMMENT_NOT_FOUND);
+
+        if(!ObjectUtils.nullSafeEquals(foundComment.getUser().getId(), currentUserId)){
+            throw new MyCustomException(ErrorCode.FORBIDDEN_UPDATE);
+        }
+
+        foundComment.updateContent(request);
+
+        return commentMapper.toCommentUpdateResponseDto(foundComment);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId, HttpSession session) {
+
+        Long currentUserId = MyCustomUtils.getCurrentUserId(session);
+        Comment foundComment = MyCustomUtils.findByIdOrElseThrow(commentRepository, commentId, ErrorCode.COMMENT_NOT_FOUND);
+
+        if(!ObjectUtils.nullSafeEquals(foundComment.getUser().getId(), currentUserId)){
+            throw new MyCustomException(ErrorCode.FORBIDDEN_DELETE);
+        }
+
+        commentRepository.delete(foundComment);
+
+    }
 }
