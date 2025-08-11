@@ -17,21 +17,24 @@ public class Schedule extends BaseEntity {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Schedule (String title, String content) {
+    private Schedule (String title, String content, User user) {
         this.title = title;
         this.content = content;
+        this.user = user;
     }
 
-    public static Schedule toScheduleEntity(ScheduleSaveRequestDto request) {
+    public static Schedule toScheduleEntity(ScheduleSaveRequestDto request, User user) {
         return new Schedule(
                 request.title(),
-                request.content()
+                request.content(),
+                user
         );
     }
 
@@ -40,7 +43,4 @@ public class Schedule extends BaseEntity {
         if(StringUtils.hasText(request.content())) this.content = request.content();
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
