@@ -9,4 +9,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     List<Schedule> findAllByOrderByCreatedAtDesc();
 
+    void deleteByUserId(Long userId);
 }

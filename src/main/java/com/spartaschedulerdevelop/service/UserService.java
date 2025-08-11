@@ -6,7 +6,9 @@ import com.spartaschedulerdevelop.common.util.MyCustomUtils;
 import com.spartaschedulerdevelop.dto.user.*;
 import com.spartaschedulerdevelop.entity.User;
 import com.spartaschedulerdevelop.mapper.UserMapper;
+import com.spartaschedulerdevelop.repository.ScheduleRepository;
 import com.spartaschedulerdevelop.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ScheduleRepository scheduleRepository;
 
     @Transactional
     public UserSaveResponseDto saveUser(UserSaveRequestDto request) {
@@ -47,26 +50,35 @@ public class UserService {
     }
 
     @Transactional
-    public UserUpdateResponseDto updateUser(Long userId, UserUpdateRequestDto request) {
+    public UserUpdateResponseDto updateUser(UserUpdateRequestDto request, HttpSession session) {
 
+        Long userId = MyCustomUtils.getCurrentUserId(session);
         User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
-        if(!user.getPassword().equals(request.password())){
+        if(!ObjectUtils.nullSafeEquals(user.getPassword(), request.password())){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         user.update(request);
+
         return userMapper.toUserUpdateResponseDto(user);
     }
 
-    public void deleteUser(Long userId, String password) {
+    @Transactional
+    public void deleteUser(String password, HttpSession session) {
+
+        Long userId = MyCustomUtils.getCurrentUserId(session);
         User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
         if(!ObjectUtils.nullSafeEquals(password, user.getPassword())){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
         }
 
+        scheduleRepository.deleteByUserId(userId);
+
         userRepository.deleteById(userId);
+
+        session.invalidate();
     }
 
 
