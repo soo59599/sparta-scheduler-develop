@@ -28,11 +28,10 @@ public class ScheduleService {
     @Transactional
     public ScheduleSaveResponseDto saveSchedule(ScheduleSaveRequestDto request, HttpSession session) {
 
-        Long userId = MyCustomUtils.getCurrentUserId(session);
-        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
+        Long currentUserId = MyCustomUtils.getCurrentUserId(session);
+        User foundUser = MyCustomUtils.findByIdOrElseThrow(userRepository, currentUserId, ErrorCode.USER_NOT_FOUND);
 
-        Schedule schedule = Schedule.toScheduleEntity(request);
-        schedule.setUser(user);
+        Schedule schedule = Schedule.toScheduleEntity(request, foundUser);
 
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return scheduleMapper.toScheduleSaveResponseDto(savedSchedule);
@@ -41,9 +40,9 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleGetOneResponseDto getSchedule(Long scheduleId) {
 
-        Schedule schedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
+        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
 
-        return scheduleMapper.toScheduleGetOneResponseDto(schedule);
+        return scheduleMapper.toScheduleGetOneResponseDto(foundSchedule);
     }
 
     @Transactional(readOnly = true)
@@ -59,29 +58,29 @@ public class ScheduleService {
     @Transactional
     public ScheduleUpdateResponseDto updateSchedule(Long scheduleId, ScheduleUpdateRequestDto request, HttpSession session) {
 
-        Long userId = MyCustomUtils.getCurrentUserId(session);
-        Schedule schedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
+        Long currentUserId = MyCustomUtils.getCurrentUserId(session);
+        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
 
-        if(!ObjectUtils.nullSafeEquals(schedule.getUser().getId(), userId)){
+        if(!ObjectUtils.nullSafeEquals(foundSchedule.getUser().getId(), currentUserId)){
             throw new MyCustomException(ErrorCode.FORBIDDEN_UPDATE);
         }
 
-        schedule.updateTitleAndContent(request);
+        foundSchedule.updateTitleAndContent(request);
 
-        return scheduleMapper.toScheduleUpdateResponseDto(schedule);
+        return scheduleMapper.toScheduleUpdateResponseDto(foundSchedule);
     }
 
     @Transactional
     public void deleteSchedule(Long scheduleId, HttpSession session) {
 
-        Long userId = MyCustomUtils.getCurrentUserId(session);
-        Schedule schedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
+        Long currentUserId = MyCustomUtils.getCurrentUserId(session);
+        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
 
-        if(!ObjectUtils.nullSafeEquals(schedule.getUser().getId(), userId)){
+        if(!ObjectUtils.nullSafeEquals(foundSchedule.getUser().getId(), currentUserId)){
             throw new MyCustomException(ErrorCode.FORBIDDEN_DELETE);
         }
 
-        scheduleRepository.delete(schedule);
+        scheduleRepository.delete(foundSchedule);
 
     }
 }

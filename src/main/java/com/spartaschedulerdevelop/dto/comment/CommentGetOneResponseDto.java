@@ -1,10 +1,11 @@
-package com.spartaschedulerdevelop.dto.schedule;
+package com.spartaschedulerdevelop.dto.comment;
 
 import java.time.LocalDateTime;
 
-public record ScheduleGetOneResponseDto(
+public record CommentGetOneResponseDto(
+        Long commentId,
         Long scheduleId,
-        String title,
+        Long userId,
         String content,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt

@@ -22,7 +22,10 @@ public enum ErrorCode {
     FORBIDDEN_DELETE("AUTH-005", "작성자만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN),
 
     //일정 관련 오류
-    SCHEDULE_NOT_FOUND("SCH-001", "해당 글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    SCHEDULE_NOT_FOUND("SCH-001", "해당 글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+
+    //코멘트 관련 오류
+    COMMENT_NOT_FOUND("COMM-001", "해당 댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
     private final String code;
     private final String message;
