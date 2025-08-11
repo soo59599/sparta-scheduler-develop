@@ -12,7 +12,7 @@ public record UserUpdateRequestDto(
         String email,
 
         @Size(min = 2, message = "이름은 2글자 이상이어야 합니다.")
-        @Size(max = 2, message = "이름은 10글자 이내여야 합니다.")
+        @Size(max = 10, message = "이름은 10글자 이내여야 합니다.")
         String name,
 
         @NotBlank(message = "비밀번호 입력은 필수입니다.")
