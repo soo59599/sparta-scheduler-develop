@@ -44,8 +44,8 @@ public class UserController {
 
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteUser(@RequestParam String password, HttpSession session){
-        userService.deleteUser(password, session);
+    public ResponseEntity<Void> deleteUser(@Valid @RequestBody UserDeleteRequestDto request, HttpSession session){
+        userService.deleteUser(request, session);
         return ResponseEntity.noContent().build();
     }
 

@@ -65,12 +65,12 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(String password, HttpSession session) {
+    public void deleteUser(UserDeleteRequestDto request, HttpSession session) {
 
         Long userId = MyCustomUtils.getCurrentUserId(session);
         User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
-        if(!ObjectUtils.nullSafeEquals(password, user.getPassword())){
+        if(!ObjectUtils.nullSafeEquals(request.password(), user.getPassword())){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
         }
 
