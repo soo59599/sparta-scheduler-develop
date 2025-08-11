@@ -10,6 +10,7 @@ import com.spartaschedulerdevelop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class UserService {
 
     @Transactional
     public UserSaveResponseDto saveUser(UserSaveRequestDto request) {
+
+        userRepository.findByEmail(request.email())
+                .ifPresent(user -> { throw new MyCustomException(ErrorCode.DUPLICATE_USER); });
 
         User savedUser = userRepository.save(User.toUserEntity(request));
 
@@ -58,7 +62,7 @@ public class UserService {
     public void deleteUser(Long userId, String password) {
         User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
 
-        if(!user.getPassword().equals(password)){
+        if(!ObjectUtils.nullSafeEquals(password, user.getPassword())){
             throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
         }
 
