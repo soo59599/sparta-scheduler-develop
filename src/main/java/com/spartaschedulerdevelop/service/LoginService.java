@@ -10,6 +10,7 @@ import com.spartaschedulerdevelop.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +20,9 @@ public class LoginService {
     private final LoginMapper loginMapper;
 
     public LoginResponseDto authenticate(LoginRequestDto request, HttpSession session) {
-        User user = userRepository.findByEmailOrElseThrow(request.email());
+        User user = userRepository.findByEmail(request.email()).orElseThrow(() -> new MyCustomException(ErrorCode.USER_NOT_FOUND));
 
-        if(!user.getPassword().equals(request.password())){
+        if(!ObjectUtils.nullSafeEquals(user.getPassword(), request.password())){
             throw new MyCustomException(ErrorCode.INVALID_CREDENTIALS);
         }
 
