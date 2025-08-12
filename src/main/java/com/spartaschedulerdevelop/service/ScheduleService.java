@@ -12,6 +12,8 @@ import com.spartaschedulerdevelop.repository.ScheduleRepository;
 import com.spartaschedulerdevelop.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -27,6 +29,7 @@ public class ScheduleService {
     private final ScheduleMapper scheduleMapper;
     private final CommentRepository commentRepository;
 
+    //일정 저장
     @Transactional
     public ScheduleSaveResponseDto saveSchedule(ScheduleSaveRequestDto request, HttpSession session) {
 
@@ -39,6 +42,7 @@ public class ScheduleService {
         return scheduleMapper.toScheduleSaveResponseDto(savedSchedule);
     }
 
+    //일정 단건 조회
     @Transactional(readOnly = true)
     public ScheduleGetOneResponseDto getSchedule(Long scheduleId) {
 
@@ -47,6 +51,7 @@ public class ScheduleService {
         return scheduleMapper.toScheduleGetOneResponseDto(foundSchedule);
     }
 
+    //일정 전체 조회(페이징x)
     @Transactional(readOnly = true)
     public List<ScheduleGetOneResponseDto> getSchedules() {
 
@@ -57,6 +62,13 @@ public class ScheduleService {
                         .toList();
     }
 
+    //일정 전체 조회(페이징o)
+    @Transactional(readOnly = true)
+    public Page<SchedulePageResponseDto> getSchedulePage(Pageable pageable) {
+        return scheduleRepository.findSchedulePageResponseDto(pageable);
+    }
+
+    //일정 수정
     @Transactional
     public ScheduleUpdateResponseDto updateSchedule(Long scheduleId, ScheduleUpdateRequestDto request, HttpSession session) {
 
@@ -72,6 +84,7 @@ public class ScheduleService {
         return scheduleMapper.toScheduleUpdateResponseDto(foundSchedule);
     }
 
+    //일정 삭제
     @Transactional
     public void deleteSchedule(Long scheduleId, HttpSession session) {
 
