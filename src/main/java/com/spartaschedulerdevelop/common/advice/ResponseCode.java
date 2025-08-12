@@ -1,4 +1,4 @@
-package com.spartaschedulerdevelop.common.exception;
+package com.spartaschedulerdevelop.common.advice;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +6,14 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorCode {
+public enum ResponseCode {
+
+    // ===== 성공 =====
+    SUCCESS("SUC-001", "요청이 성공적으로 처리되었습니다.",HttpStatus.OK),
+
+
+    // ===== 실패 =====
+
     //인자 관련 오류
     INVALID_INPUT("VAL-001", "입력값이 유효하지 않습니다", HttpStatus.BAD_REQUEST), //ExceptionHandler 유동적으로 사용
 

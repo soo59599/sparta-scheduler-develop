@@ -1,5 +1,6 @@
-package com.spartaschedulerdevelop.common.exception;
+package com.spartaschedulerdevelop.common.advice.exception;
 
+import com.spartaschedulerdevelop.common.advice.ResponseCode;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class GlobalExceptionHandler {
         ErrorResponse error =
                 ErrorResponse.of(
                 HttpStatus.BAD_REQUEST,
-                "VAL-001",
+                ResponseCode.INVALID_INPUT.getCode(),
                 "입력값 오류: " + msg,
                 request.getRequestURI()
         );

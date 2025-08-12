@@ -1,8 +1,8 @@
 package com.spartaschedulerdevelop.service;
 
 import com.spartaschedulerdevelop.common.config.PasswordEncoder;
-import com.spartaschedulerdevelop.common.exception.ErrorCode;
-import com.spartaschedulerdevelop.common.exception.MyCustomException;
+import com.spartaschedulerdevelop.common.advice.ResponseCode;
+import com.spartaschedulerdevelop.common.advice.exception.MyCustomException;
 import com.spartaschedulerdevelop.common.util.MyCustomUtils;
 import com.spartaschedulerdevelop.dto.user.*;
 import com.spartaschedulerdevelop.entity.Schedule;
@@ -32,7 +32,7 @@ public class UserService {
     public UserSaveResponseDto saveUser(UserSaveRequestDto request) {
 
         if(userRepository.existsByEmail(request.email())){
-            throw new MyCustomException(ErrorCode.DUPLICATE_USER);
+            throw new MyCustomException(ResponseCode.DUPLICATE_USER);
         }
 
         String encodedPassword = passwordEncoder.encode(request.password());
@@ -45,7 +45,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserGetOneResponseDto getUser(Long userId){
 
-        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
+        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ResponseCode.USER_NOT_FOUND);
 
         return userMapper.toUserGetOneResponseDto(user);
     }
@@ -60,10 +60,10 @@ public class UserService {
     public UserUpdateResponseDto updateUser(UserUpdateRequestDto request, HttpSession session) {
 
         Long userId = MyCustomUtils.getCurrentUserId(session);
-        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
+        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ResponseCode.USER_NOT_FOUND);
 
         if(!passwordEncoder.matches(request.password(), user.getPassword())){
-            throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
+            throw new MyCustomException(ResponseCode.INVALID_PASSWORD);
         }
 
         user.update(request);
@@ -75,10 +75,10 @@ public class UserService {
     public void deleteUser(UserDeleteRequestDto request, HttpSession session) {
 
         Long userId = MyCustomUtils.getCurrentUserId(session);
-        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ErrorCode.USER_NOT_FOUND);
+        User user = MyCustomUtils.findByIdOrElseThrow(userRepository, userId, ResponseCode.USER_NOT_FOUND);
 
         if(!passwordEncoder.matches(request.password(), user.getPassword())){
-            throw new MyCustomException(ErrorCode.INVALID_PASSWORD);
+            throw new MyCustomException(ResponseCode.INVALID_PASSWORD);
         }
 
 

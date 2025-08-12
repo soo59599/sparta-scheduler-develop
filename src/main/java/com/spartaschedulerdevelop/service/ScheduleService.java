@@ -1,7 +1,7 @@
 package com.spartaschedulerdevelop.service;
 
-import com.spartaschedulerdevelop.common.exception.ErrorCode;
-import com.spartaschedulerdevelop.common.exception.MyCustomException;
+import com.spartaschedulerdevelop.common.advice.ResponseCode;
+import com.spartaschedulerdevelop.common.advice.exception.MyCustomException;
 import com.spartaschedulerdevelop.common.util.MyCustomUtils;
 import com.spartaschedulerdevelop.dto.schedule.*;
 import com.spartaschedulerdevelop.entity.Schedule;
@@ -34,7 +34,7 @@ public class ScheduleService {
     public ScheduleSaveResponseDto saveSchedule(ScheduleSaveRequestDto request, HttpSession session) {
 
         Long currentUserId = MyCustomUtils.getCurrentUserId(session);
-        User foundUser = MyCustomUtils.findByIdOrElseThrow(userRepository, currentUserId, ErrorCode.USER_NOT_FOUND);
+        User foundUser = MyCustomUtils.findByIdOrElseThrow(userRepository, currentUserId, ResponseCode.USER_NOT_FOUND);
 
         Schedule schedule = Schedule.toScheduleEntity(request, foundUser);
 
@@ -46,7 +46,7 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleGetOneResponseDto getSchedule(Long scheduleId) {
 
-        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
+        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ResponseCode.SCHEDULE_NOT_FOUND);
 
         return scheduleMapper.toScheduleGetOneResponseDto(foundSchedule);
     }
@@ -73,10 +73,10 @@ public class ScheduleService {
     public ScheduleUpdateResponseDto updateSchedule(Long scheduleId, ScheduleUpdateRequestDto request, HttpSession session) {
 
         Long currentUserId = MyCustomUtils.getCurrentUserId(session);
-        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
+        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ResponseCode.SCHEDULE_NOT_FOUND);
 
         if(!ObjectUtils.nullSafeEquals(foundSchedule.getUser().getId(), currentUserId)){
-            throw new MyCustomException(ErrorCode.FORBIDDEN_UPDATE);
+            throw new MyCustomException(ResponseCode.FORBIDDEN_UPDATE);
         }
 
         foundSchedule.updateTitleAndContent(request);
@@ -89,10 +89,10 @@ public class ScheduleService {
     public void deleteSchedule(Long scheduleId, HttpSession session) {
 
         Long currentUserId = MyCustomUtils.getCurrentUserId(session);
-        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
+        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ResponseCode.SCHEDULE_NOT_FOUND);
 
         if(!ObjectUtils.nullSafeEquals(foundSchedule.getUser().getId(), currentUserId)){
-            throw new MyCustomException(ErrorCode.FORBIDDEN_DELETE);
+            throw new MyCustomException(ResponseCode.FORBIDDEN_DELETE);
         }
 
         commentRepository.deleteByScheduleId(scheduleId);
