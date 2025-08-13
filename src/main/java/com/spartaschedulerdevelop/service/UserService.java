@@ -81,14 +81,19 @@ public class UserService {
             throw new MyCustomException(ResponseCode.INVALID_PASSWORD);
         }
 
+        //1.유저가 달았던 댓글 삭제
+        commentRepository.deleteByUserId(userId);
 
+        //2.유저가 작성한 일정에 달린 댓글 삭제
         List<Schedule> schedules = scheduleRepository.findByUserId(userId);
         schedules.forEach(schedule ->
                 commentRepository.deleteByScheduleId(schedule.getId())
         );
 
+        //3.유저가 작성한 일정 삭제
         scheduleRepository.deleteByUserId(userId);
 
+        //4.유저 삭제
         userRepository.deleteById(userId);
 
         session.invalidate();
