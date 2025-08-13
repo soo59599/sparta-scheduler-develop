@@ -1,7 +1,7 @@
 package com.spartaschedulerdevelop.service;
 
-import com.spartaschedulerdevelop.common.exception.ErrorCode;
-import com.spartaschedulerdevelop.common.exception.MyCustomException;
+import com.spartaschedulerdevelop.common.advice.ResponseCode;
+import com.spartaschedulerdevelop.common.advice.exception.MyCustomException;
 import com.spartaschedulerdevelop.common.util.MyCustomUtils;
 import com.spartaschedulerdevelop.dto.comment.*;
 import com.spartaschedulerdevelop.entity.Comment;
@@ -32,9 +32,9 @@ public class CommentService {
     public CommentSaveResponseDto saveComment(CommentSaveRequestDto request, Long scheduleId, HttpSession session) {
 
         Long currentUserId = MyCustomUtils.getCurrentUserId(session);
-        User foundUser = MyCustomUtils.findByIdOrElseThrow(userRepository, currentUserId, ErrorCode.USER_NOT_FOUND);
+        User foundUser = MyCustomUtils.findByIdOrElseThrow(userRepository, currentUserId, ResponseCode.USER_NOT_FOUND);
 
-        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ErrorCode.SCHEDULE_NOT_FOUND);
+        Schedule foundSchedule = MyCustomUtils.findByIdOrElseThrow(scheduleRepository, scheduleId, ResponseCode.SCHEDULE_NOT_FOUND);
 
         Comment comment = Comment.toCommentEntity(request, foundUser, foundSchedule);
 
@@ -56,10 +56,10 @@ public class CommentService {
     public CommentUpdateResponseDto updateComment(CommentUpdateRequestDto request, Long commentId, HttpSession session) {
 
         Long currentUserId = MyCustomUtils.getCurrentUserId(session);
-        Comment foundComment = MyCustomUtils.findByIdOrElseThrow(commentRepository, commentId, ErrorCode.COMMENT_NOT_FOUND);
+        Comment foundComment = MyCustomUtils.findByIdOrElseThrow(commentRepository, commentId, ResponseCode.COMMENT_NOT_FOUND);
 
         if(!ObjectUtils.nullSafeEquals(foundComment.getUser().getId(), currentUserId)){
-            throw new MyCustomException(ErrorCode.FORBIDDEN_UPDATE);
+            throw new MyCustomException(ResponseCode.FORBIDDEN_UPDATE);
         }
 
         foundComment.updateContent(request);
@@ -71,10 +71,10 @@ public class CommentService {
     public void deleteComment(Long commentId, HttpSession session) {
 
         Long currentUserId = MyCustomUtils.getCurrentUserId(session);
-        Comment foundComment = MyCustomUtils.findByIdOrElseThrow(commentRepository, commentId, ErrorCode.COMMENT_NOT_FOUND);
+        Comment foundComment = MyCustomUtils.findByIdOrElseThrow(commentRepository, commentId, ResponseCode.COMMENT_NOT_FOUND);
 
         if(!ObjectUtils.nullSafeEquals(foundComment.getUser().getId(), currentUserId)){
-            throw new MyCustomException(ErrorCode.FORBIDDEN_DELETE);
+            throw new MyCustomException(ResponseCode.FORBIDDEN_DELETE);
         }
 
         commentRepository.delete(foundComment);

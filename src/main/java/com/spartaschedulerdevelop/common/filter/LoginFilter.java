@@ -1,7 +1,7 @@
 package com.spartaschedulerdevelop.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spartaschedulerdevelop.common.exception.ErrorResponse;
+import com.spartaschedulerdevelop.common.advice.exception.ErrorResponse;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
