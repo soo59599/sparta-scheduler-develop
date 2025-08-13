@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
-    List<Schedule> findAllByOrderByCreatedAtDesc();
+    List<Schedule> findAllByOrderByModifiedAtDesc();
 
     void deleteByUserId(Long userId);
 

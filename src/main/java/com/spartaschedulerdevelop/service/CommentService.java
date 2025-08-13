@@ -46,7 +46,7 @@ public class CommentService {
     public List<CommentGetOneResponseDto> getComments(Long scheduleId) {
 
         return commentRepository
-                .findByScheduleIdOrderByCreatedAtDesc(scheduleId)
+                .findByScheduleIdOrderByModifiedAtDesc(scheduleId)
                 .stream()
                 .map(commentMapper::toCommentGetOneResponseDto)
                 .toList();

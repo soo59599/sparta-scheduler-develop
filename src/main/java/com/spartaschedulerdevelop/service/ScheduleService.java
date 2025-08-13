@@ -56,7 +56,7 @@ public class ScheduleService {
     public List<ScheduleGetOneResponseDto> getSchedules() {
 
         return scheduleRepository
-                        .findAllByOrderByCreatedAtDesc()
+                        .findAllByOrderByModifiedAtDesc()
                         .stream()
                         .map(scheduleMapper::toScheduleGetOneResponseDto)
                         .toList();
@@ -100,4 +100,6 @@ public class ScheduleService {
         scheduleRepository.delete(foundSchedule);
 
     }
+
+
 }
