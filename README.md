@@ -74,6 +74,18 @@ com/
 
 **Base URL:** `http://localhost:8080`
 
+## ⚠️ 주의사항
+
+- 모든 요청은 `Content-Type: application/json`으로 설정
+- 인증이 필요한 API는 로그인 후 세션 유지 필요
+
+### 인증 필요 API
+- 일정 생성, 조회, 수정, 삭제
+- 사용자 정보 수정, 조회, 삭제
+- 댓글 생성, 조회, 수정, 삭제
+
+
+
 ---
 
 ## 📋 일정(Schedule) API
@@ -81,7 +93,7 @@ com/
 | Method | URL | Description |
 |--------|-----|-------------|
 | POST | `/schedules` | 일정 생성 |
-| GET | `/schedules` | 일정 전체 조회 (이름 필터링 가능) |
+| GET | `/schedules` | 일정 전체 조회|
 | GET | `/schedules/{id}` | 일정 단건 조회 |
 | PATCH | `/schedules/{id}` | 일정 수정 |
 | DELETE | `/schedules/{id}` | 일정 삭제 |
@@ -143,16 +155,6 @@ com/
 
 # 📘 **[👉 전체 API 명세 보기](./docs/api.md)**
 
-
-## ⚠️ 주의사항
-
-- 모든 요청은 `Content-Type: application/json`으로 설정
-- 인증이 필요한 API는 로그인 후 세션 유지 필요
-
-### 인증 필요 API
-- 일정 생성, 조회, 수정, 삭제
-- 사용자 정보 수정, 조회, 삭제
-- 댓글 생성, 조회, 수정, 삭제
 
 
 ---
