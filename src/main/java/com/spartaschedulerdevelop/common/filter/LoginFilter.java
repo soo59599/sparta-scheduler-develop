@@ -49,7 +49,7 @@ public class LoginFilter implements Filter {
                         HttpStatus.UNAUTHORIZED,
                         "AUTH-002",
                         "로그인이 필요합니다",
-                        httpRequest.getRequestURI()
+                        requestURI
                 );
 
                 httpResponse.setStatus(401);
